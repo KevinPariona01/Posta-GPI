@@ -23,67 +23,42 @@ export class RegistrarCitaComponent implements OnInit {
   //FECHA
   selected
   //ESPECIALIDADES
-  especialidades: Especialidades[] = [
-    {
-      nombre:'psicologo'
-    },
-    {
-      nombre:'traumatologia'
-    },
-    {
-      nombre:'pediatria'
-    }
-  ]
-
-  datos = [
-    {
-      hora: '8:00 - 8:30',
-      estado: 'disponible'
-    },
-    {
-      hora: '8:30 - 9:00',
-      estado: 'Reservado'
-    },
-    {
-      hora: '9:00 - 9:30',
-      estado: 'Reservado'
-    },
-  ]
+  especialidades: any  = []
+  idEspecialidad: number = 0
 
 
-  dataSource = new MatTableDataSource
-  displayedColumns: String[] = ['hora', 'estado', 'acciones']
+  citas = new MatTableDataSource
+  displayedColumns: String[] = ['fecha', 'horaInicio', 'horaFin', 'estado', 'acciones']
     
   enableHorarios: boolean = true;
 
   ngOnInit(): void {
-    this.dataSource = new MatTableDataSource<any>(this.datos);
+    this.obtenerEspecialidades();
   }
 
   seleccionarFecha(selected){
-   //console.log(selected.toISOString());
-   let fecha : string = selected.toLocaleDateString('en-us', { year:"numeric"}) + "-" + selected.toLocaleDateString('en-us', { month:"numeric"}) + "-0" + selected.toLocaleDateString('en-us', { day:"numeric"})
-   console.log("Fecha:", fecha);
+    if(this.idEspecialidad == 0){
+      this.ShowSnackBar(`Seleccione una especialidad`); 
+    }else{
+      let fecha : string = selected.toLocaleDateString('en-us', { year:"numeric"}) + "-" + selected.toLocaleDateString('en-us', { month:"numeric"}) + "-0" + selected.toLocaleDateString('en-us', { day:"numeric"})
+      console.log("Fecha:", fecha);
+      this.registrarCitasService.obtenerListaCitas(fecha,this.idEspecialidad ).subscribe((res:any)=>{
+       if(res.length!=0){
+       this.citas = new MatTableDataSource<any>(res);
+       this.enableHorarios = false;
+       }else{
+         this.ShowSnackBar(`No hay citas registradas`); 
+         this.enableHorarios = true;
+       }
+      });;
+    }
    
-   this.enableHorarios = false;
-   this.ShowSnackBar(`Fecha: ${fecha}`);
-   let especialidad_id = 1
-   let parametro = {
-    fecha : selected,
-    especialidad_id: 1
-   }
+  }
 
-   this.registrarCitasService.obtenerUsers(fecha,especialidad_id ).subscribe((res)=>{
-    console.log(res);
-   });;
-
-   this.registrarCitasService.obtenerEspecialidades().subscribe((res)=>{
-    console.log(res);
-   });;
-   
-   this.registrarCitasService.obtenerListaCitas(fecha,especialidad_id ).subscribe((res)=>{
-    console.log(res);
-   });;
+  obtenerEspecialidades(){
+    this.registrarCitasService.obtenerEspecialidades().subscribe((res:any)=>{
+        this.especialidades = res;
+     });;
   }
 
   seleccionaHorarios(hora){
@@ -92,6 +67,7 @@ export class RegistrarCitaComponent implements OnInit {
     this.volverMenu();
   }
 
+   
 
   ShowSnackBar(msn){
     this.snackBar.openFromComponent(SnackBarComponent, {

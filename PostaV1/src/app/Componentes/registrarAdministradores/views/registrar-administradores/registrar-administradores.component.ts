@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
+import { AdministradoresService } from '../../services/administradores.service';
 import { RegistrarAdministradoresEditarComponent } from '../registrar-administradores-editar/registrar-administradores-editar.component';
 
 @Component({
@@ -12,40 +13,20 @@ export class RegistrarAdministradoresComponent implements OnInit {
 
   displayedColumns: String[] = ['nombre', 'dni', 'correo', 'usuario', 'acciones']
 
-  dataSource = new MatTableDataSource
-
-  datos = [
-    {
-      nombre: 'Alex Francisco',
-      dni: '78912345',
-      correo : 'alex@gmail.com',
-      usuario: 'alexP'
-    },
-    {
-      nombre: 'Alex Francisco',
-      dni: '78912345',
-      correo : 'alex@gmail.com',
-      usuario: 'alexP'
-    },
-    {
-      nombre: 'Alex Francisco',
-      dni: '78912345',
-      correo : 'alex@gmail.com',
-      usuario: 'alexP'
-    },
-  ]
+  administradores = new MatTableDataSource
 
   constructor(
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    public administradoresService: AdministradoresService
   ) { }
 
   ngOnInit(): void {
-    this.dataSource =  new MatTableDataSource<any>(this.datos);
+    this.obtenerUsers();
   }
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+    this.administradores.filter = filterValue.trim().toLowerCase();
   }
 
   openDialog(element): void {
@@ -57,6 +38,13 @@ export class RegistrarAdministradoresComponent implements OnInit {
       console.log('The dialog was closed');
       //this.animal = result;
     });
+  }
+
+  obtenerUsers(){
+   this.administradoresService.obtenerUsers().subscribe((res:any)=>{
+    console.log(res);
+    this.administradores = new MatTableDataSource<any>(res)
+   });; 
   }
 
 }
