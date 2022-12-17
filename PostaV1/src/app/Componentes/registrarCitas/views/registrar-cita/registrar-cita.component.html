@@ -1,0 +1,61 @@
+<app-menu>
+    <div class="contenedor">
+        <h1>Seleccione su turno</h1>
+        <div class="contenedorRegistro">
+            <form>
+                <div>
+                    <mat-form-field appearance="fill">
+                        <mat-label>Especialidades</mat-label>
+                        <mat-select  name="Especialidades">
+                            <mat-option *ngFor="let e of especialidades">
+                            {{e.nombre}}
+                            </mat-option>
+                        </mat-select>
+                        </mat-form-field>
+                </div>
+                <div class="cont" >
+                    <div class="divCalendario" >
+                        <mat-card class="matCalendario">
+                            <mat-calendar [(selected)]="selected" (click)="seleccionarFecha(selected)"  appearance="fill" >
+                                <button type="button" class="mat-calendar-body-cell"  ></button>
+                            </mat-calendar>
+                        </mat-card>
+                    </div>
+                </div>
+                <div [hidden]="enableHorarios" class="divTabla" >
+                    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+                        <!--- Note that these columns can be defined in any order.
+                              The actual rendered columns are set as a property on the row definition" -->
+                      
+                        <!-- Position Column -->
+                        <ng-container matColumnDef="hora">
+                          <th mat-header-cell *matHeaderCellDef> Horario </th>
+                          <td mat-cell *matCellDef="let element"> {{element.hora}} </td>
+                        </ng-container>
+                      
+                        <!-- Name Column -->
+                        <ng-container matColumnDef="estado">
+                          <th mat-header-cell *matHeaderCellDef> Estados </th>
+                          <td mat-cell *matCellDef="let element"> {{element.estado}} </td>
+                        </ng-container>
+
+                        <!-- Name Column -->
+                        <ng-container matColumnDef="acciones">
+                            <th mat-header-cell *matHeaderCellDef> Seleccionar </th>
+                            <td mat-cell *matCellDef="let element"> 
+                                <button (click)="seleccionaHorarios(element.hora)" type="button" mat-raised-button color="primary" >
+                                    <mat-icon>add</mat-icon>    
+                                </button>
+                            </td>
+                          </ng-container>
+                      
+                      
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                      </table>     
+                </div>
+            </form>
+        </div>
+    </div>
+</app-menu>

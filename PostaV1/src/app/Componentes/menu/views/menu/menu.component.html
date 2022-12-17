@@ -1,0 +1,49 @@
+<div class="contenedor-padre">
+    <mat-toolbar class="barra">
+      <mat-toolbar-row>
+        <button mat-button color="basic" (click)="cajon.toggle()" mat-icon-button>
+          <mat-icon>menu</mat-icon>
+        </button>
+        <span>
+          POSTA
+        </span>
+        <span class="example-fill-remaining-space"></span>
+        <div class="header__login">
+          <div class="user d-flex">
+            <div>
+              <img src="../../../../assets/images/icon_usuario-25.png" alt="" class="icon_user">
+            </div>
+            <div class="user__well">
+              <div>Bienvenido</div>
+            <div>
+              <p class="user__name text-uppercase">{{userlog}}</p>
+            </div>
+          </div>
+          </div>
+          <div class="logout">
+            <button class="btn_salir" (click)="salir()">
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </div>
+        </div>
+      </mat-toolbar-row>
+    </mat-toolbar>
+   <mat-sidenav-container class="contenido">
+      <mat-sidenav style="min-width: 220px;" #cajon mode="side" opened>
+        <mat-nav-list>
+          <a mat-list-item [routerLink]="['/registrar-cita']" (click)="setItem(1)" [ngClass]="{'select':iditem == 1}">
+            <mat-icon>notifications</mat-icon>
+            <span>Registrar Cita</span>
+          </a>
+          <a mat-list-item [routerLink]="['/registrar-administradores']" (click)="setItem(2)" [ngClass]="{'select':iditem == 2}">
+            <mat-icon>person</mat-icon>
+            <span>Registrar Administradores</span>
+          </a>
+        </mat-nav-list>
+      </mat-sidenav>-->
+      <mat-sidenav-content class="padding-10">
+        <ng-content>
+        </ng-content>
+      </mat-sidenav-content>
+    </mat-sidenav-container>
+  </div>
