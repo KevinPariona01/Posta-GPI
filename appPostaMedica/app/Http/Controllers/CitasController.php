@@ -21,7 +21,34 @@ class CitasController extends Controller
                 ->select('fecha', 'hora_inicio','hora_final','estado')
                 ->get();
         
-        return $citas;
+        $hora_inicio=date('H:i:s', strtotime("8:00:00"));
+        $hora_final=date('H:i:s', strtotime("8:20:00"));
+        $estado = "libre";
+        $citasTotales = array();
+        $citas = json_decode($citas);
+
+        for($i = 0; $i<30; $i++){
+            $claveCita = array_search($hora_inicio, array_column($citas, 'hora_inicio'));
+
+            if($claveCita!==false){
+                $estado = $citas[$claveCita]->estado;
+            }else{
+                $estado = "libre";
+            }
+
+            $citasTotales[$i] = array(
+                "fecha"    => $request->fecha,
+                "hora_inicio"    => $hora_inicio,
+                "hora_final"    => $hora_final,
+                "estado"  => $estado,
+            );
+
+            $hora_inicio = $hora_final;
+            $hora_final = strtotime ( '+20 minute' , strtotime ($hora_final) );
+            $hora_final = date ( 'H:i:s' , $hora_final);
+        }
+
+        return $citasTotales;
     }
 
     /**
