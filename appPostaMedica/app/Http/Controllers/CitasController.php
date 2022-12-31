@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Cita;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class CitasController extends Controller
 {
@@ -69,7 +70,8 @@ class CitasController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(),[
+
+        $validator = \Validator::make($request->all(),[
             'fecha' => 'required|date',
             'hora_inicio' => 'required',
             'hora_final' => 'required',
@@ -77,24 +79,8 @@ class CitasController extends Controller
             'especialidad_id' => 'required|numeric',
         ]);
 
-
-        if ($validator->fails()) {
-
-            if($request->ajax())
-            {
-                return response()->json(array(
-                    'success' => false,
-                    'message' => 'There are incorect values in the form!',
-                    'errors' => $validator->getMessageBag()->toArray()
-                ), 422);
-            }
-
-            $this->throwValidationException(
-
-                $request, $validator
-
-            );
-
+        if($validator->fails()){
+            return response()->json(['success' => false,'errors'=>$validator->errors()->all()]);
         }
 
         $cita = new Cita;

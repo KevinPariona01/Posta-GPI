@@ -113,12 +113,14 @@ class UsersController extends Controller
                 
                 switch ($tipo_usuario) {
                     case 'paciente':
-                        $user = Paciente::select('tipo_usuario')
+                        $usuario = Paciente::select('nombre')
                                 ->where('user_id','=',$user->id)
                                 ->get();
                         break;
                     case 'medico':
-                        echo "i es igual a 1";
+                        $usuario = Paciente::select('nombre')
+                                ->where('user_id','=',$user->id)
+                                ->get();
                         break;
                     case 'admin':
                         echo "i es igual a 2";
