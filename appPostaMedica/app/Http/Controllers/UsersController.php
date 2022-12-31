@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Medico;
+use App\Models\Paciente;
+use App\Models\Administrador;
 
 class UsersController extends Controller
 {
@@ -14,7 +17,9 @@ class UsersController extends Controller
      */
     public function index()
     {
-        return User::all();
+        $users =  User::all();
+
+        return $users;
     }
 
     /**
@@ -88,5 +93,39 @@ class UsersController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function validar(Request $request)
+    {
+        $user =  User::where('user', '=', $request->user)->get();  
+        
+        if(empty($user)){
+            $mensaje = "El usuario no existe";
+        }
+        else{
+            $user =  User::where('password', '=', $request->password)->get();
+            if(empty($user)){
+                $mensaje = "La contraseña no es validar";
+            }else{
+                $tipo_usuario = User::select('tipo_usuario')
+                                ->where('id','=',$user->id)
+                                ->get();
+                
+                switch ($tipo_usuario) {
+                    case 'paciente':
+                        $user = Paciente::select('tipo_usuario')
+                                ->where('user_id','=',$user->id)
+                                ->get();
+                        break;
+                    case 'medico':
+                        echo "i es igual a 1";
+                        break;
+                    case 'admin':
+                        echo "i es igual a 2";
+                        break;
+                }
+            }
+        }
+
     }
 }

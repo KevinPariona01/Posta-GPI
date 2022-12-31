@@ -21,5 +21,6 @@ use App\Http\Controllers\EspecialidadsController;
 });*/
 
 Route::get('especialidades', [EspecialidadsController::class, 'index']);
+Route::post('users/validar', [UsersController::class, 'validar']);
 Route::apiResource('users', UsersController::class);
 Route::apiResource('citas', CitasController::class);

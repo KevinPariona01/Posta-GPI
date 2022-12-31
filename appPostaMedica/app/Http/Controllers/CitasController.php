@@ -69,7 +69,7 @@ class CitasController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $validator = Validator::make($request->all(),[
             'fecha' => 'required|date',
             'hora_inicio' => 'required',
             'hora_final' => 'required',
@@ -77,6 +77,25 @@ class CitasController extends Controller
             'especialidad_id' => 'required|numeric',
         ]);
 
+
+        if ($validator->fails()) {
+
+            if($request->ajax())
+            {
+                return response()->json(array(
+                    'success' => false,
+                    'message' => 'There are incorect values in the form!',
+                    'errors' => $validator->getMessageBag()->toArray()
+                ), 422);
+            }
+
+            $this->throwValidationException(
+
+                $request, $validator
+
+            );
+
+        }
 
         $cita = new Cita;
         $cita->fecha = $request->fecha;
